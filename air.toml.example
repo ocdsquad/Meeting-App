@@ -1,0 +1,18 @@
+# Nama binary output
+bin = "app"
+
+# Direktori kerja proyek
+root = "."
+
+# Direktori yang akan dipantau
+[build]
+  include = ["."]
+  exclude = ["vendor", "node_modules", ".git"]
+
+# Path ke file `main.go` Anda
+[build]
+  cmd = "go build -o ./bin/{{bin}} ./cmd/main.go"
+
+# Perintah untuk menjalankan binary setelah build
+[run]
+  cmd = "./bin/{{bin}}"

@@ -1,0 +1,17 @@
+makefile
+
+.env
+uploads
+
+# IDE or editor-specific ignores
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Air config and binary
+.air.toml
+bin/
+tmp/
+testdata/
+build-errors.log

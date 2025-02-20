@@ -1,0 +1,867 @@
+definitions:
+  model.ReservationCodeRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  model.ReservationCreateRequestSwagger:
+    properties:
+      category_snack_id:
+        type: integer
+      date:
+        type: string
+      end_time:
+        type: string
+      name:
+        type: string
+      notes:
+        type: string
+      organization:
+        type: string
+      phone:
+        type: string
+      room_id:
+        type: integer
+      start_time:
+        type: string
+      total_participant:
+        type: integer
+    required:
+    - date
+    - end_time
+    - name
+    - organization
+    - phone
+    - room_id
+    - start_time
+    - total_participant
+    type: object
+  model.ReservationUpdateRequest:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
+  model.RoomRequestSwagger:
+    properties:
+      attachment_url:
+        type: string
+      capacity:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      room_type_id:
+        type: integer
+    required:
+    - capacity
+    - name
+    - price
+    - room_type_id
+    type: object
+  model.UserCreateRequest:
+    properties:
+      confirm_password:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - confirm_password
+    - email
+    - password
+    - username
+    type: object
+  model.UserForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  model.UserLoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.UserResetPasswordRequest:
+    properties:
+      confirm_password:
+        type: string
+      password:
+        type: string
+    required:
+    - confirm_password
+    - password
+    type: object
+  model.UserUpdateProfileRequest:
+    properties:
+      email:
+        type: string
+      language:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - language
+    - username
+    type: object
+  utils.APIResponse:
+    description: Standard API response format
+    properties:
+      data: {}
+      message:
+        type: string
+      meta:
+        $ref: '#/definitions/utils.Meta'
+      status:
+        type: integer
+    type: object
+  utils.Meta:
+    properties:
+      total_count:
+        type: integer
+      totalContent:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: E-Meeting API
+  version: "1.0"
+paths:
+  /api/v1/auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Send OTP to email for password reset
+      parameters:
+      - description: User Forgot Password Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Forgot Password
+      tags:
+      - auth
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with the provided username and password, user has role admin
+        or user
+      parameters:
+      - description: User Login Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Login
+      tags:
+      - auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: User Create Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Register a new user
+      tags:
+      - auth
+  /api/v1/auth/reset-password/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Reset password with the provided new password
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Reset Password Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Reset Password
+      tags:
+      - auth
+  /api/v1/capacities:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all capacity with pagination and sorting options
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Order by field
+        in: query
+        name: order_by
+        type: string
+      - description: Sort by order (asc/desc)
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all capacities
+      tags:
+      - capacity
+  /api/v1/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Get dashboard
+      parameters:
+      - description: Start Date in YYYY-MM-DD format
+        in: query
+        name: start_date
+        type: string
+      - description: End Date in YYYY-MM-DD format
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get dashboard
+      tags:
+      - dashboard
+  /api/v1/reservation/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete reservation
+      parameters:
+      - description: Reservation ID
+        in: path
+        name: id
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete reservation
+      tags:
+      - reservation
+  /api/v1/reservation/{id}/statuses:
+    put:
+      consumes:
+      - application/json
+      description: Update reservation status
+      parameters:
+      - description: Reservation ID
+        in: path
+        name: id
+        required: true
+        type: number
+      - description: Reservation Status Request
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReservationUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update reservation status
+      tags:
+      - reservation
+  /api/v1/reservations:
+    get:
+      consumes:
+      - application/json
+      description: Get All Reservations
+      parameters:
+      - description: Start Date in  YYYY-MM-DD format
+        in: query
+        name: start_date
+        type: string
+      - description: End Date in  YYYY-MM-DD format
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Reservations
+      tags:
+      - reservation
+    post:
+      consumes:
+      - application/json
+      description: Save the reservation code based on the provided details
+      parameters:
+      - description: Reservation Code Request
+        in: body
+        name: reservation
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReservationCodeRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Save a reservation code
+      tags:
+      - reservation
+  /api/v1/reservations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get reservation detail
+      parameters:
+      - description: Reservation ID
+        in: path
+        name: id
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get reservation detail
+      tags:
+      - reservation
+  /api/v1/reservations/histories:
+    get:
+      consumes:
+      - application/json
+      description: Get reservation history
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get reservation history
+      tags:
+      - reservation
+  /api/v1/reservations/inquiry:
+    post:
+      consumes:
+      - application/json
+      description: Get reservation details based on the provided input
+      parameters:
+      - description: Reservation Code Request
+        in: body
+        name: reservation
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReservationCreateRequestSwagger'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Inquiry reservation details
+      tags:
+      - reservation
+  /api/v1/room-types:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all room types with pagination and sorting options
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Order by field
+        in: query
+        name: order_by
+        type: string
+      - description: Sort by order (asc/desc)
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all room types
+      tags:
+      - room_type
+  /api/v1/rooms:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of rooms with optional pagination and sorting
+      parameters:
+      - description: 'filter by capacity of rooms per page (default: 0 for no limit)'
+        in: query
+        name: capacity
+        type: integer
+      - description: 'filter by room_type of rooms per page (default: 0 for no limit)'
+        in: query
+        name: room_type
+        type: integer
+      - description: 'Page number (default: 0)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of rooms per page (default: 0 for no limit)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Field to order by (default: ''id'')'
+        in: query
+        name: order_by
+        type: string
+      - description: 'Sort direction (default: ''desc'', can be ''asc'')'
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get all rooms
+      tags:
+      - room
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a new room along with its details
+      parameters:
+      - description: Room file upload
+        in: formData
+        name: files
+        required: true
+        type: file
+      - description: Room name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Room description
+        in: formData
+        name: description
+        type: string
+      - description: Room price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Room type ID
+        in: formData
+        name: room_type_id
+        required: true
+        type: number
+      - description: Room capacity
+        in: formData
+        name: capacity
+        required: true
+        type: number
+      - description: Request Input
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoomRequestSwagger'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Insert a new room
+      tags:
+      - room
+  /api/v1/rooms/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a room by its ID
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a room
+      tags:
+      - room
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a room by its ID
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get a room
+      tags:
+      - room
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update a room along with its details
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Room file upload
+        in: formData
+        name: files
+        required: true
+        type: file
+      - description: Room name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Room description
+        in: formData
+        name: description
+        type: string
+      - description: Room price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Room type ID
+        in: formData
+        name: room_type_id
+        required: true
+        type: integer
+      - description: Room capacity
+        in: formData
+        name: capacity_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update a room
+      tags:
+      - room
+  /api/v1/rooms/{id}/reservations:
+    get:
+      consumes:
+      - application/json
+      description: Get List Reservations by room id
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: number
+      - description: Start Date in YYYY-MM-DD format
+        in: query
+        name: start_date
+        type: string
+      - description: End Date in YYYY-MM-DD format
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Reservations by room id
+      tags:
+      - room
+  /api/v1/snacks:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all snacks with pagination and sorting options
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Order by field
+        in: query
+        name: order_by
+        type: string
+      - description: Sort by order (asc/desc)
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all snacks
+      tags:
+      - snack
+  /api/v1/users:
+    put:
+      consumes:
+      - application/json
+      description: Update user profile
+      parameters:
+      - description: User Update Profile Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserUpdateProfileRequest'
+      - description: Profile picture
+        in: formData
+        name: files
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile
+      tags:
+      - user
+  /api/v1/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user by ID
+      tags:
+      - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

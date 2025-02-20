@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS reservation_rooms;
+DROP TABLE IF EXISTS attachments;
+DROP TABLE IF EXISTS room_types;
+DROP TABLE IF EXISTS capacities;
+DROP TABLE IF EXISTS rooms;
+DROP TABLE IF EXISTS category_snacks;
+DROP TABLE IF EXISTS user_has_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS tokens;
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS users;
