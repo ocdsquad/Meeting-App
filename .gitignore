@@ -2,7 +2,7 @@ makefile
 
 .env
 uploads
-
+scripts/migrations
 # IDE or editor-specific ignores
 .vscode/
 .idea/
