@@ -8,7 +8,7 @@ uploads
 .idea/
 .DS_Store
 *.swp
-script
+scripts
 # Air config and binary
 .air.toml
 bin/
